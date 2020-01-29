@@ -180,6 +180,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		IO.StateParser.close();
     });
 
+    // Kill all processes on str+c and kill id.
+    process.on('SIGINT', (code) => {
+        RC.PubSub.shutdown();
+        ROS.shutdown();
+        IO.PackageParser.stopWatching();
+		IO.StateParser.close();
+    });
+
+    process.on('SIGUSR1', (code) => {
+        RC.PubSub.shutdown();
+        ROS.shutdown();
+        IO.PackageParser.stopWatching();
+		IO.StateParser.close();
+    });
+    process.on('SIGUSR2', (code) => {
+        RC.PubSub.shutdown();
+        ROS.shutdown();
+        IO.PackageParser.stopWatching();
+		IO.StateParser.close();
+    });
+
     nw.App.on('open', () => {
         nw.Window.open('src/window.html', {
             'width': 1340,
@@ -209,6 +230,11 @@ document.addEventListener('DOMContentLoaded', function() {
             allow_close = confirm(txt);
         }
         if (allow_close) {
+            // Kill all processes on window closing.
+            RC.PubSub.shutdown();
+            ROS.shutdown();
+            IO.PackageParser.stopWatching();
+            IO.StateParser.close();
             this.close(true);
         }
     });
